@@ -60,3 +60,9 @@ export async function verifyLogin(
 
   return userWithoutPassword;
 }
+
+export async function getUserAvatarById(user: User["id"]) {
+  return "/assets/user/default_avatar.png";
+}
+
+export type AvatarType = string;
