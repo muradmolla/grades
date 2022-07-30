@@ -14,15 +14,13 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  isAdmin Boolean @default(false)
+
   password Password?
-  notes    Note[]
-}
-
-model Password {
-  hash String
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String @unique
+  moderator LessonModerators[]
+  grades Grades[]
+  notes Note[]
+  lessons LessonStudents[]
 }
 
 model Note {
@@ -35,4 +33,62 @@ model Note {
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
+}
+
+model Password {
+  hash String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String @unique
+}
+
+model Lesson {
+  id String @id @default(cuid())
+  name String
+
+  moderators   LessonModerators[]
+  gradesScheme GradedActivities[]
+  students LessonStudents[]
+}
+
+model LessonStudents {
+  id String @id @default(cuid())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String
+  
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  lessonId String
+}
+
+model LessonModerators {
+  id String @id @default(cuid())
+
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  lessonId String
+
+  moderator User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String
+}
+
+model GradedActivities {
+  id String @id @default(cuid())
+  title String
+  weight Float
+  maxValue Int
+
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  lessonId String
+
+  grades Grades[]
+}
+
+model Grades {
+  id String @id @default(cuid())
+  grade Int
+
+  student User @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  studentId String
+
+  gradedActivity GradedActivities @relation(fields: [gradedActivityId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  gradedActivityId String
 }
