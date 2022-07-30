@@ -15,15 +15,13 @@ describe("smoke tests", () => {
     cy.visit("/");
     cy.url().should('contain', '/login')
     cy.wait(300);
-    cy.findByRole("link", { name: /Sign up/i }).click();
-    cy.wait(300);
     cy.findByRole("textbox", { name: /email/i }).type(loginForm.email);
     cy.findByLabelText(/password/i).type(loginForm.password);
     cy.findByRole("button", { name: /create account/i }).click();
 
     cy.get("#__logout_button").click({force: true});
     cy.findByRole("button", { name: /log in/i })
-  }); 
+  });
 
 /*    it("should allow you to make a note", () => {
     const testNote = {
