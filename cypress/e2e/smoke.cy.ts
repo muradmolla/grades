@@ -14,13 +14,18 @@ describe("smoke tests", () => {
 
     cy.visit("/");
     cy.url().should('contain', '/login')
-    cy.wait(300);
+
+    cy.intercept("/join*").as('signUp');
+    cy.findByRole("link", { name: /sign up/i }).should('be.visible');
+    cy.findByRole("link", { name: /sign up/i }).click({force: true});
+    cy.wait("@signUp")
+
     cy.findByRole("textbox", { name: /email/i }).type(loginForm.email);
     cy.findByLabelText(/password/i).type(loginForm.password);
     cy.findByRole("button", { name: /create account/i }).click();
 
     cy.get("#__logout_button").click({force: true});
-    cy.findByRole("button", { name: /log in/i })
+    cy.findByRole("button", { name: /log in/i }).should('be.visible');
   });
 
 /*    it("should allow you to make a note", () => {
